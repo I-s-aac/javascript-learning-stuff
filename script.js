@@ -1,160 +1,172 @@
-const canvas = document.getElementById("canvas");
-const context = canvas.getContext("2d");
+/* adding thingies
+    let x = 20000;
+    let y = 3;
+    x = ++y;
+    console.log(x); // logs 4
+    console.log(y); // logs 4
+ */
 
-function setupCanvas () {
-    let size = window.innerWidth/2;
-    if (window.innerHeight < window.innerWidth) {
-        size = window.innerHeight/2;
+
+/* assignment operators
+    +=, -=, =, *=, /=, %=
+*/
+
+
+/* logical operators
+    ==, equal to
+    ===, equal value and type
+    <, <=, >=, >
+    !=, not equal
+    !==, not equal value or not equal type
+    ?, ternary operator, ex. let variable = condition ? valueIfTrue : valueIfFalse;
+    can also do
+    let variable = condition1 ? value1 : condition2 ? value2 : value3
+    or
+    let variable = condition1 ? condition2 ? value1 : value2 : value3
+    let variable = false ? true ? 1 : 2 : 3; // variable is equal to 3
+*/
+
+
+/* functions 1
+    function func(x, y) {
+        do stuff
     }
-    canvas.style.width = size + "px";
-    canvas.style.height = canvas.style.width;
-    canvas.width = size;
-    canvas.height = size;
-}
-setupCanvas();
-
-let mouseX = 0;
-let mouseY = 0;
-let mousePressed = false;
-let mouseHoldingChecker = false;
-let mouseHeldCheckerIndex = null;
-
-let running = true;
-let checkers = [];
-
-
-let checkerColors = ["orange", "white"];
-
-const squareSize = canvas.width / 8;
-
-function wait(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function renderBoard() {
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    let useRed = true;
-    for (let x = 0; x < 8; x++) {
-        for (let y = 0; y < 8; y++) {
-            if (useRed) {
-                context.fillStyle = "red";
-                useRed = false;
-            } else {
-                context.fillStyle = "black";
-                useRed = true;
-            }
-            if (y == 7) { useRed = !useRed; }
-
-            context.fillRect(x * squareSize, y * squareSize, squareSize, squareSize);
-        }
+    same as
+    const func = (x, y) => {
+        do stuff
     }
-}
-function createChecker(x, y, color) {
-    let checker = {
-        x: x,
-        y: y,
-        color: color,
-        rectX: x - squareSize / 2,
-        rectY: y - squareSize / 2
+    same as
+    const func = (x, y) => do stuff;
+*/
+
+
+/* conditional execution (aka if statements)
+    code
+    code
+
+    if (condition evaluates to true) {
+        do thingA
+    } else {
+        do thingB
+    }
+
+    code
+    code
+
+    switch (expression) {
+        case "a":
+            code;
+            break;
+
+        case 1:
+            code;
+            break;
+
+        case "1":
+        case "2":
+            code;
+            break;
+
+        default:
+            code;
+            shouldn't need break because it's at the bottom
+    }
+
+    code
+    code
+
+    if (conditon evaluates to true) {
+        code
+    } else if (condition2 evaluates to true) {
+        code 
+    } else {
+        code 
+    }
+
+    code
+    code
+
+    if (a || b) or. apparently a "|" is called a pipe
+    if (!a) not
+    if (a && b) and
+    xor doesn't exist, but can be made manually using more logic stuff
+
+*/
+
+
+/* getting truthiness
+truthiness of "test" = !!"test"
+*/
+
+
+/* fizz buzz
+    let number = 15;
+    let text = "";
+
+    text += a && b ? "FizzBuzz" : a ? "Fizz" : b ? "Buzz" : number;
+    console.log(text);
+
+    text = "";
+
+    text += (number % 3 === 0) && (number % 5 === 0) ? "FizzBuzz" : (number % 3 === 0) ? "Fizz" : (number % 5 === 0) ? "Buzz" : number;
+    console.log(text);
+
+    text = "";
+
+    if (a) text += "Fizz";
+    if (b) text += "Buzz";
+    if (text === "") text = number;
+
+    console.log(text);
+*/
+
+
+/* more switch stuff
+function getDrinkPrice(size) {
+    size = size.toLowerCase();
+     let prices = {
+        "small": "$2.00",
+        "medium": "$3.50",
+        "large": "$4.50",
+        "xlarge": "6.00"
     };
-
-    // Method to render the checker (circle) on the canvas
-    checker.render = function () {
-        context.fillStyle = this.color;
-        context.beginPath();
-        context.arc(this.x, this.y, squareSize / 3, 0, Math.PI * 2); // Draw a circle at (x, y) with radius 50
-        context.fill(); // Fill with red
-        context.strokeStyle = 'black';
-        context.lineWidth = 5;
-        context.stroke(); // Outline with black
-
+    if (prices[size] !== undefined) {
+        return prices[size];
     }
-
-    checker.mouseCollision = function () {
-        if (mousePressed && (!mouseHoldingChecker || mouseHeldCheckerIndex === checkers.indexOf(this))) {
-            if (mouseX > this.rectX && mouseX < this.rectX + squareSize) {
-                if (mouseY > this.rectY && mouseY < this.rectY + squareSize) {
-                    mouseHoldingChecker = true;
-                    mouseHeldCheckerIndex = checkers.indexOf(this);
-                    this.x = mouseX;
-                    this.y = mouseY;
-                    this.rectX = mouseX - (squareSize/2);
-                    this.rectY = mouseY - (squareSize/2);
-                }
-            }
-        }
-    }
-
-    checkers.push(checker);
-}
-
-function createCheckers() {
-    // top rows
-    for (let x = 2; x <= 8; x += 2) {
-        createChecker((x * squareSize) - squareSize / 2, squareSize / 2, checkerColors[0]);
-    }
-    for (let x = 1; x <= 8; x += 2) {
-        createChecker((x * squareSize) - squareSize / 2, (squareSize * 1) + squareSize / 2, checkerColors[0]);
-    }
-    for (let x = 2; x <= 8; x += 2) {
-        createChecker((x * squareSize) - squareSize / 2, (squareSize * 2) + squareSize / 2, checkerColors[0]);
-    }
-
-    // bottom row
-    for (let x = 1; x <= 8; x += 2) {
-        createChecker((x * squareSize) - squareSize / 2, (canvas.height) - squareSize / 2, checkerColors[1]);
-    }
-    for (let x = 2; x <= 8; x += 2) {
-        createChecker((x * squareSize) - squareSize / 2, (canvas.height - squareSize * 2) + squareSize / 2, checkerColors[1]);
-    }
-    for (let x = 1; x <= 8; x += 2) {
-        createChecker((x * squareSize) - squareSize / 2, (canvas.height - squareSize * 3) + squareSize / 2, checkerColors[1]);
+    return "invalid size"
+    
+    switch (size) {
+        case "small":
+            return "$2.00";
+        case "medium":
+            return "$3.50";
+        case "large":
+            return "$4.50";
+        case "xlarge":
+            return "$6.00";
+        default:
+            return "invalid size";
     }
 }
 
-createCheckers();
 
-document.addEventListener('keydown', (event) => {
-    if (event.key === 'i') {
-        running = false;
-        context.clearRect(0, 0, canvas.width, canvas.height);
-    }
-});
+let price = getDrinkPrice("large");
 
-document.addEventListener("mousemove", (event) => {
-    const rect = canvas.getBoundingClientRect();
-    mouseX = event.clientX - rect.left;
-    mouseY = event.clientY - rect.top;
-})
-
-canvas.addEventListener("mousedown", (event) => {
-    mousePressed = true;
-    event.preventDefault();
-})
-document.addEventListener("mouseup", (event) => {
-    mousePressed = false;
-    mouseHoldingChecker = false;
-    mouseHeldCheckerIndex = null;
-})
+console.log(price);
+*/
 
 
+/* palindrome checker 
+function checkPalindrome(string) {
+    string = string.toLowerCase();
+    const regex = /[^a-z]+/g;
+    string = string.replace(regex, "");
 
+    const reversed = string.split("").reverse().join("") === string;
+   
+    return reversed
 
-
-async function game() {
-    const frameDelay = 1000 / 60;
-
-    while (running) {
-        renderBoard();
-
-
-        for (checker of checkers) {
-            checker.render();
-            checker.mouseCollision();
-        }
-
-        await wait(frameDelay);
-    }
 }
-
-game();
+console.log(checkPalindrome("apple"));
+console.log(checkPalindrome("ra  cec  ar"));
+*/
