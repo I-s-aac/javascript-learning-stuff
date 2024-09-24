@@ -1,89 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>day 6</title>
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="./style.css">
-    <script defer src="./script.js"></script>
+    <title>day 7</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
 </head>
+
 <body>
-    <h1>calculator</h1>
-    <div class="container text-center text-light w-25">
+    <div class="container-fluid text-center">
         <div class="row">
-            <div class="col-12 border border-secondary-subtle text-end text-dark" id="output">0</div>
+            <h1 class="col-12">Todo list</h1>
         </div>
-
         <div class="row">
-            <div class="col-6 bg-secondary border border-secondary-subtle" onclick="reset()">
-                reset
+            <div class="col-12">
+                <h3>Create a new task</h3>
             </div>
-            <div class="col bg-dark border border-secondary-subtle" onclick="nextNumber('%');">
-                %
+            <div class="col-12">
+                <label for="taskName">Task name:</label>
+                <input type="text" name="taskName" id="taskName">
+                <label for="taskDetail">Extra details (optional):</label>
+                <input type="text" name="taskDetail" id="taskDetail">
+                <button onclick="addTask()">Add</button>
             </div>
-            <div class="col bg-warning border border-secondary-subtle" onclick="nextNumber('/');">
-                &divide;
-            </div>
-        </div>
-
-        <div class="row bg-secondary">
-            <div class="col border border-secondary-subtle" onclick="modifyOutput('7');">
-                7
-            </div>
-            <div class="col border border-secondary-subtle" onclick="modifyOutput('8');">
-                8
-            </div>
-            <div class="col border border-secondary-subtle" onclick="modifyOutput('9');">
-                9
-            </div>
-            <div class="col bg-warning border border-secondary-subtle" onclick="nextNumber('*');">
-                &times;
-            </div>
-        </div>
-
-        <div class="row bg-secondary">
-            <div class="col border border-secondary-subtle" onclick="modifyOutput('4');">
-                4
-            </div>
-            <div class="col border border-secondary-subtle" onclick="modifyOutput('5');">
-                5
-            </div>
-            <div class="col border border-secondary-subtle" onclick="modifyOutput('6');">
-                6
-            </div>
-            <div class="col bg-warning border border-secondary-subtle" onclick="nextNumber('-');">
-                -
-            </div>
-        </div>
-
-        <div class="row bg-secondary">
-            <div class="col border border-secondary-subtle" onclick="modifyOutput('1');">
-                1
-            </div>
-            <div class="col border border-secondary-subtle" onclick="modifyOutput('2');">
-                2
-            </div>
-            <div class="col border border-secondary-subtle" onclick="modifyOutput('3');">
-                3
-            </div>
-            <div class="col bg-warning border border-secondary-subtle" onclick="nextNumber('+');">
-                +
-            </div>
-        </div>
-
-        <div class="row bg-secondary">
-            <div class="col-6 border border-secondary-subtle" onclick="modifyOutput('0');">
-                0
-            </div>
-            <div class="col border border-secondary-subtle" onclick="modifyOutput('.');">
-                .
-            </div>
-            <div class="col bg-warning border border-secondary-subtle" onclick="calculate()">
-                =
+            <div class="col-12 d-flex flex-column align-items-center">
+                <ul id="taskList" class="d-flex flex-column align-items-center text-start">
+                </ul>
             </div>
         </div>
     </div>
 </body>
+
 </html>

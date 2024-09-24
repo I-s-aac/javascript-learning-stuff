@@ -1,127 +1,152 @@
-/* // functions
+const taskNameInput = document.getElementById("taskName");
+const taskDetailInput = document.getElementById("taskDetail");
+const taskList = document.getElementById("taskList");
+let tasks = [];
 
-console.log(this);
-class myClass {
-    constructor() {
-        this.x = 0;
-        // "this" refers to itself as a class
+
+function updateTasks() {
+    taskList.innerHTML = ""; // Clear the current list
+
+    // Loop through tasks and create list items
+    tasks.forEach((task, index) => {
+        console.log(task);
+        const li = document.createElement('li');
+        li.id = `task-${index}`;
+        li.textContent = `${task.name} | ${task.detail}`;
+        li.innerHTML += `&nbsp; <span onclick="removeTask(${index})">Remove</span>`;
+        li.className = task.completed ? 'completed' : ''; // Add 'completed' class if task is completed
+        li.style.overflow = "hidden";
+        li.style.textOverflow = "ellipsis";
+        li.style.display = "block";
+        li.style.whiteSpace = "nowrap";
+        li.style.width = "100%";
+
+        li.onclick = () => toggleTask(index); // Set the click event to toggle the task
+
+        li.onmouseenter = () => {
+            li.style.textOverflow = "";
+            li.style.overflow = "auto";
+        }
+
+        li.onmouseleave = () => {
+            li.style.overflow = "hidden";
+            li.style.textOverflow = "ellipsis";
+            li.scrollLeft = 0;
+        }
+
+
+        taskList.appendChild(li); // Add the list item to the task list
+    });
+}
+
+function removeTask(index) {
+    tasks[index].removed = true;
+    tasks.splice(index, 1);
+    document.getElementById(`task-${index}`).remove();
+    updateTasks();
+}
+
+
+function addTask() {
+
+    const task = {
+        "name": taskNameInput.value.trim(),
+        "detail": taskDetailInput.value.trim(),
+        "completed": false,
+        "removed": false
+    }
+
+    if (task.name !== "") {
+        tasks.push(task);
+        taskNameInput.value = "";
+        taskDetailInput.value = "";
+        updateTasks();
     }
 }
 
-let test = new myClass();
-
-const test2 = () => {
-    this.y = 0;
-    // this uses global scope
-    return this;
+function toggleTask(index) {
+    tasks[index].completed = !tasks[index].completed;
+    updateTasks();
 }
 
-let test3 = test2();
 
-console.log(test, test3);
-const myFunction2 = function () {
-    console.log(this);
-}
-myFunction2();
-
-const myFunction3 = () => {
-    console.log(this);
-}
-myFunction3();
-
-() => {
-    console.log("does this do anything");
-}
-
-// functions are objects
-function a() {
-    let variable = 0;
-}
-// console.log(variable); causes an error, variable is undefined
-
-
-thing();
-
-function thing() {
-    console.log("thing called using code magic");
-} */
-
-/* function colors(red="red", blue="blue", purple="purple") {
-    console.log(red, blue, purple);
-}
-
-const add = (a, b) => a + b;
-
-colors();
-let myColors = colors;
-myColors();
-
-let num = add(5, 10); */
-
-// method: function of an object
 /* 
-const clickFunction = function () {
-    console.log("stuff");
-}
-document.body.onload = function() {
-    console.log("test");
-}
+// closures
 
-document.addEventListener("clicK", clickFunction);
-// document.removeEventListener("click", clickFunction); */
+const createCounter = () => {
+    let count = 0;
 
-let number1 = 0;
-let operator = null;
-let number2 = 0;
-
-const output = document.getElementById("output");
-
-const add = (a, b) => a + b;
-const subtract = (a, b) => a - b;
-const divide = (a, b) => {
-    if (a === 0 || b === 0) return "Divide by 0 error";
-    return a / b;
-}
-const multiply = (a, b) => a * b;
-const mod = (a, b) => a % b;
-
-function reset() {
-    number1 = 0;
-    number2 = 0;
-    operator = null;
-    output.innerText = 0;
-}
-
-function modifyOutput(modification) {
-    output.innerText += modification;
-}
-
-function nextNumber(operation) {
-    number1 = Number(output.innerText);
-    output.innerText = "0";
-    operator = operation;
-}
-
-function calculate() {
-    let result = "NaN";
-    let number2 = Number(output.innerText);
-    switch (operator) {
-        case "+":
-            result = add(number1, number2);
-            break;
-        case "-":
-            result = subtract(number1, number2);
-            break;
-        case "/":
-            result = divide(number1, number2);
-            break;
-        case "*":
-            result = multiply(number1, number2);
-            break;
-        case "%":
-            result = mod(number1, number2);
-            break;
+    return {
+        increment: function () {
+            count++;
+            console.log(count);
+            return count;
+        },
+        decrement: function () {
+            count--;
+            console.log(count);
+            return count;
+        }
     }
-    output.innerText = result;
 }
 
+const counter = createCounter();
+
+counter.increment();
+counter.increment();
+
+
+
+// loops
+// for of, only use on arrays
+// for in, use on arrays or objects
+const array = ["aa", "bb", "cc"];
+const object = {
+    "a": "a1",
+    "b": "b1",
+    "c": "c1",
+    myFunction: function () {
+        console.log("hello from object");
+    }
+};
+
+for (let i = 0; i < array.length; i++) {
+    console.log(array[i]);
+}
+
+for (let item of array) {
+    console.log("array item: ", item);
+    item = "aaa"; // does nothing, because reasons
+}
+
+for (const index in array) {
+    console.log("array index: ", index);
+}
+
+for (const key in object) {
+    console.log("object key: ", key);
+}
+
+// causes error
+ for (const item of object) {
+    console.log("object item: ", item);
+} 
+
+array.forEach((item, index) => {
+    console.log("array (item, index) ", item, ", ", index);
+})
+
+let condition = true;
+while (condition) {
+    console.log("stuff");
+    condition = Math.random() > 0.7 ? false : true
+}
+
+Object.keys(object).forEach((key, index) => {
+    console.log(key, index);
+})
+Object.values(object).forEach((value, index) => {
+    console.log(value, index);
+})
+
+ */
