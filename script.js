@@ -1,6 +1,6 @@
 "use strict";
 
-
+// when you don't realize it's a sports analogy until you read about the goalkeeper lol
 class Player {
     #speed;
     #stamina;
