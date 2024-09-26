@@ -157,19 +157,21 @@ class Entity {
 class Enemy extends Entity {
     constructor(stats, x, y, xv, yv) {
         super(x, y, xv, yv);
-        this.stats = stats;
-        // or use health, attack, defense individually here
+        // this.stats = stats; or
+        this.health = stats.health ?? 10;
+        this.attack = stats.attack ?? 1;
+        this.defense = stats.defense ?? 0;
     }
 }
-const basicStats = {
-    "health": 10,
-    "attack": 1,
-    "defense": 0
+const mediumStats = {
+    "health": 50,
+    "attack": 5,
+    "defense": 3
 }
 const bossStats = {
     "health": 100,
     "attack": 10,
     "defense": 10
 }
-const basicEnemy = new Enemy(basicStats);
+const basicEnemy = new Enemy(mediumStats);
 const bossEnemy = new Enemy(bossStats);
