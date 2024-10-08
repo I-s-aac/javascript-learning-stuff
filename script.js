@@ -1,167 +1,132 @@
 "use strict";
-// the stack
-// last in, first out (how you move stuff in a stack, ex. push/pop)
-// peek (return top element w/o removing), clear, and size, are other methods for doing stack stuff
-// stacks are arrays, but different bc semantic meaning and time complexity, stack have O(1) time complex methods
-// stack methods: push, pop, peek, size
-class Stack {
+
+
+// linked lists
+// single and double 
+// single
+// stuff in the list has a reference to the next thing, last one points to null
+// double
+// stuff in the list has a pointer to previous and next item
+
+class Node {
+    constructor(data) {
+        this.data = data ?? 0;
+        this.next = null;
+    }
+}
+
+class DoubleNode extends Node {
+    constructor(data) {
+        super(data);
+        this.prev = null;
+    }
+}
+
+class LinkedList {
     constructor() {
-        this.items = [];
+        this.head = null;
     }
-    push(item) {
-        this.items.push(item);
-    }
-    pop() {
-        return this.isEmpty() ? null : this.items.pop();
-    }
-    peek() {
-        return this.isEmpty() ? null : this.items[this.items.length - 1];
-    }
-    size() {
-        return this.items.length;
-    }
-    isEmpty() {
-        return this.size() === 0;
-    }
-}
+    append(data) {
+        const node = new Node(data);
 
-
-let string = "{}{aa}a}{a{()aaa}";
-
-function checkThing() {
-    const stack = new Stack();
-    let extraStuff = string.match(/[^(){}[\]]/g);
-    let str = string.replace(/[^(){}]+/g, "");
-
-    for (let i = 0; i < str.length; i++) {
-
-        if (
-            (stack.peek() === "{" && str[i] === "}") ||
-            (stack.peek() === "(" && str[i] === ")") ||
-            (stack.peek() === "[" && str[i] === "]")
-        ) {
-            stack.pop();
-        } else if (str[i] === "(" || str[i] === "{" || str[i] === "[") {
-            stack.push(str[i]);
-        }
-    }
-    if (stack.size() !== 0) {
-        console.warn("doesn't work");
-    } else {
-        console.log("works");
-    }
-    console.log(extraStuff.join(""));
-}
-checkThing();
-
-function betterThing() {
-    const stack = new Stack();
-    const open = ["{", "(", "["];
-    const close = ["}", ")", "]"];
-    const matches = {
-        "{": "}",
-        "(": ")",
-        "[": "]"
-    }
-
-    for (const char of string) {
-        if (open.includes(char)) {
-            stack.push(char);
-        } else if (close.includes(char)) {
-            if (stack.isEmpty()) {
-                return false;
-            }
-            // mismatched brackets
-            if (matches[stack.pop() !== char]) {
-                return false;
-            }
+        if (this.head === null) {
+            this.head = node;
         } else {
-            // do stuff?
+            let currentNode = this.head;
+            while (currentNode.next !== null) {
+                currentNode = currentNode.next;
+            }
+            currentNode.next = node;
         }
+    }
+    prepend(data) {
+        const node = new Node(data);
+
+
+        if (this.head === null) {
+            this.head = node;
+        } else {
+            node.next = this.head;
+            this.head = node;
+        }
+    }
+    deleteWithValue(data) {
+        let currentNode = this.head;
+
+        if (this.head === null) {
+            return;
+        }
+
+        if (this.head.data === data) {
+            this.head = this.head.next;
+            return;
+        }
+
+        while (currentNode !== null) {
+            if (currentNode.next?.data === data) {
+                currentNode.next = currentNode.next.next;
+                return;
+            }
+            currentNode = currentNode.next;
+        }
+    }
+    printList() {
+        if (this.head !== null) {
+            let currentNode = this.head;
+            while (currentNode !== null) {
+                console.log(currentNode.data, currentNode.next);
+                currentNode = currentNode.next;
+            }
+        }
+    }
+    insertAt(index, data) {
+        const node = new Node(data);
+
+        if (index < 0) {
+            return;
+        }
+        if (index === 0) {
+            this.prepend(node);
+            return;
+        }
+
+        let currentIndex = 0;
+        let currentNode = this.head;
+        while (currentNode !== null && currentIndex < index) {
+            if (currentIndex === index - 1) {
+                node.next = currentNode.next;
+                currentNode.next = node;
+                return;
+            }
+
+            currentIndex++;
+            currentNode = currentNode.next;
+        }
+        // index larger than list length, append node to list
+        this.append(node);
+
     }
 }
 
-
-// reverse polish notation
-// num num num + *
-// num + num * num?
-
-// weak map
-// const items = new WeakMap();
-
-
-
-
-
-// queue, first in, first out
-
-
-
-class Queue {
+class DoubleLinkedList extends LinkedList {
     constructor() {
-        this.items = [];
+        super();
+        this.tail = null;
     }
-    enqueue(item) {
-        this.items.push(item);
+    prepend() {
+        
     }
-    dequeue() {
-        return this.isEmpty() ? null : this.items.shift();
-    }
-    peek() {
-        return this.isEmpty() ? null : this.items[0];
-    }
-    size() {
-        return this.items.length;
-    }
-    isEmpty() {
-        return this.size() === 0;
+    printReverse() {
+
     }
 }
 
+const list = new LinkedList();
 
-// do reverse polish notation
-// 3 4 -
-// is
-// 3 - 4
-
-// wow RPN is kinda confusing
-// but it also makes sense if you thonk hard enough
-
-function reversePolishNotation(input) {
-    const tokens = input.split(" ");
-    const stack = new Stack();
-    for (const token of tokens) {
-        if (!["+", "-", "*", "/", "%"].includes(token)) {
-            stack.push(Number(token));
-        } else {
-            let num2 = stack.pop();
-            let num1 = stack.pop();
-
-            let result = null;
-            switch (token) {
-                case "+":
-                    result = num1 + num2;
-                    break;
-                case "-":
-                    result = num1 - num2;
-                    break;
-                case "*":
-                    result = num1 * num2;
-                    break;
-                case "/":
-                    result = num1 / num2;
-                    break;
-                case "%":
-                    result = num1 % num2;
-                    break;
-            }
-            stack.push(result);
-        }
-    }
-
-    const finalResult = stack.pop();
-    return finalResult;
-}
-console.log(
-    reversePolishNotation("6 8 + 10 + 12 14 + -")
-);
+list.append("water");
+list.append("water 2");
+list.prepend("water prepend");
+list.printList();
+console.log("line break");
+list.deleteWithValue("water 2");
+list.printList();
