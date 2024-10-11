@@ -1,49 +1,27 @@
 "use strict";
 
-// sorting algorithms
-function doRecursion(array, index = 0) {
-    if (index >= array.length) {
-        return array;
-    }
+// returns index in an array of a given target, or -1 if not found
+function binarySearch(array, target) {
 
-    let lowest = index;
+    function search(array, target, start, end) {
 
-    for (let i = index; i < array.length; i++) {
-        if (array[i] < array[lowest]) {
-            lowest = i;
-        }
-    }
+        let midIndex = Math.floor((start + end) / 2);
+        let midValue = array[midIndex];
 
-    [array[index], array[lowest]] = [array[lowest], array[index]];
-
-    return doRecursion(array, index + 1);
-}
-
-function selectionSort(array) {
-    // the recursion thingy can also be used
-    let diminishingArray = array.slice();
-    let sortedArray = [];
-
-
-    let lowest = array[0];
-    let lowestIndex = 0;
-
-    while (diminishingArray.length > 0) {
-
-        lowest = diminishingArray[0];
-        lowestIndex = 0;
-
-        for (let i = 0; i < diminishingArray.length; i++) {
-            if (diminishingArray[i] < lowest) {
-                lowest = diminishingArray[i];
-                lowestIndex = i;
-            }
+        if (midValue === target) {
+            return midIndex;
+        } else if (start > end) {
+            return -1;
         }
 
-        sortedArray.push(lowest);
-        diminishingArray.splice(lowestIndex, 1)[0];
+        if (midValue < target) {
+            start = midIndex + 1;
+        } else {
+            end = midIndex - 1;
+        }
 
+        return search(array, target, start, end);
     }
 
-    return sortedArray;
+    return search(array, target, 0, array.length - 1);
 }
